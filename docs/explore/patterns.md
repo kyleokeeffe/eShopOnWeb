@@ -32,7 +32,7 @@ API Endpoints reorganize APIs in much the same way Razor Pages reorganize contro
 
 ## Mediator
 
-Some parts of the application use the [mediator design pattern](https://deviq.com/design-patterns/mediator-pattern) to decouple initiating actions from their implementations. These actions can be in the form of commands that expect a result, or events that have no expected response. The sample uses [the MediatR package](https://github.com/jbogard/MediatR) for its implementation of the pattern, which you will see used in the Web project.
+Some parts of the application use the [mediator design pattern](https://deviq.com/design-patterns/mediator-pattern) to decouple initiating actions from their implementations. These actions can be in the form of commands that expect a result, or events that have no expected response. The sample uses [the Mediator package](https://github.com/martinothamar/Mediator) for its implementation of the pattern, which you will see used in the Web project.
 
 ## Repository
 

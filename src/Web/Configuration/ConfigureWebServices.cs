@@ -1,4 +1,4 @@
-﻿using Microsoft.eShopWeb.ApplicationCore.Services;
+﻿using Mediator;
 using Microsoft.eShopWeb.Web.Interfaces;
 using Microsoft.eShopWeb.Web.Services;
 
@@ -8,13 +8,8 @@ public static class ConfigureWebServices
 {
     public static IServiceCollection AddWebServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // Add MediatR support for the services
-        services.AddMediatR(cfg =>
-        {
-            cfg.RegisterServicesFromAssembly(typeof(BasketViewModelService).Assembly);
-            cfg.RegisterServicesFromAssembly(typeof(OrderService).Assembly);
-        }
-        );
+        // Add Mediator support for the services
+        services.AddMediator(options => options.ServiceLifetime = ServiceLifetime.Scoped);
         services.AddScoped<IBasketViewModelService, BasketViewModelService>();
         services.AddScoped<CatalogViewModelService>();
         services.AddScoped<ICatalogItemViewModelService, CatalogItemViewModelService>();

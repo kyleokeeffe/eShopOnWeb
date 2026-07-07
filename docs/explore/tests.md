@@ -15,7 +15,7 @@ The [ApplicationCore tests](https://github.com/NimblePros/eShopOnWeb/tree/main/t
 - [Testing services](https://github.com/NimblePros/eShopOnWeb/tree/main/tests/UnitTests/ApplicationCore/Services/)
 - [Testing with the Specifications pattern](https://github.com/NimblePros/eShopOnWeb/tree/main/tests/UnitTests/ApplicationCore/Specifications)
 
-The [MediatorHandlers/OrdersTests](https://github.com/NimblePros/eShopOnWeb/tree/main/tests/UnitTests/MediatorHandlers/OrdersTests) can give you an idea of how to write tests around MediatR handlers.
+The [MediatorHandlers/OrdersTests](https://github.com/NimblePros/eShopOnWeb/tree/main/tests/UnitTests/MediatorHandlers/OrdersTests) can give you an idea of how to write tests around Mediator handlers.
 
 ## Integration Tests
 
