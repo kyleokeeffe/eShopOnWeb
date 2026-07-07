@@ -9,7 +9,7 @@ public static class ConfigureWebServices
     public static IServiceCollection AddWebServices(this IServiceCollection services, IConfiguration configuration)
     {
         // Add Mediator support for the services
-        services.AddMediator();
+        services.AddMediator(options => options.ServiceLifetime = ServiceLifetime.Scoped);
         services.AddScoped<IBasketViewModelService, BasketViewModelService>();
         services.AddScoped<CatalogViewModelService>();
         services.AddScoped<ICatalogItemViewModelService, CatalogItemViewModelService>();
