@@ -8,11 +8,13 @@ namespace Microsoft.eShopWeb.EndToEndTests.Playwright;
 public sealed class BrowserFixture : IAsyncLifetime
 {
     private readonly HttpClient _httpClient;
+    private string _solutionRoot = string.Empty;
     private Process? _webProcess;
     private IPlaywright? _playwright;
 
     public IBrowser Browser { get; private set; } = default!;
     public string BaseUrl { get; private set; } = string.Empty;
+    public string ArtifactsRootPath { get; private set; } = string.Empty;
 
     public BrowserFixture()
     {
@@ -27,12 +29,58 @@ public sealed class BrowserFixture : IAsyncLifetime
 
     public async ValueTask InitializeAsync()
     {
-        BaseUrl = await StartWebAppAsync();
+        _solutionRoot = FindSolutionRoot();
+        ArtifactsRootPath = Path.Combine(_solutionRoot, "TestResults", "PlaywrightArtifacts");
+        Directory.CreateDirectory(ArtifactsRootPath);
+
+        BaseUrl = await StartWebAppAsync(_solutionRoot);
 
         _playwright = await Microsoft.Playwright.Playwright.CreateAsync();
         Browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
             Headless = true
+        });
+    }
+
+    public async Task<(IBrowserContext Context, string OutputDirectory)> CreateDebugContextAsync(string testName)
+    {
+        string testDirectory = Path.Combine(
+            ArtifactsRootPath,
+            $"{SanitizePathSegment(testName)}-{DateTime.UtcNow:yyyyMMdd-HHmmss}");
+        Directory.CreateDirectory(testDirectory);
+
+        string videoDirectory = Path.Combine(testDirectory, "video");
+        Directory.CreateDirectory(videoDirectory);
+
+        IBrowserContext context = await Browser.NewContextAsync(new BrowserNewContextOptions
+        {
+            IgnoreHTTPSErrors = true,
+            RecordVideoDir = videoDirectory
+        });
+
+        await context.Tracing.StartAsync(new TracingStartOptions
+        {
+            Screenshots = true,
+            Snapshots = true,
+            Sources = true
+        });
+
+        return (context, testDirectory);
+    }
+
+    public async Task CaptureFailureArtifactsAsync(IBrowserContext context, IPage page, string outputDirectory)
+    {
+        Directory.CreateDirectory(outputDirectory);
+
+        await page.ScreenshotAsync(new PageScreenshotOptions
+        {
+            Path = Path.Combine(outputDirectory, "failure.png"),
+            FullPage = true
+        });
+
+        await context.Tracing.StopAsync(new TracingStopOptions
+        {
+            Path = Path.Combine(outputDirectory, "trace.zip")
         });
     }
 
@@ -54,10 +102,9 @@ public sealed class BrowserFixture : IAsyncLifetime
         }
     }
 
-    private async Task<string> StartWebAppAsync()
+    private async Task<string> StartWebAppAsync(string solutionRoot)
     {
         const string baseUrl = "https://localhost:5001";
-        string solutionRoot = FindSolutionRoot();
         string webProject = Path.Combine(solutionRoot, "src", "Web", "Web.csproj");
 
         var startInfo = new ProcessStartInfo
@@ -111,6 +158,20 @@ public sealed class BrowserFixture : IAsyncLifetime
         }
 
         throw new TimeoutException($"Web app did not start within {timeout.TotalSeconds} seconds.");
+    }
+
+    private static string SanitizePathSegment(string value)
+    {
+        char[] invalidChars = Path.GetInvalidFileNameChars();
+        Span<char> buffer = stackalloc char[value.Length];
+
+        int i = 0;
+        foreach (char c in value)
+        {
+            buffer[i++] = invalidChars.Contains(c) ? '-' : c;
+        }
+
+        return buffer[..i].ToString();
     }
 
     private static string FindSolutionRoot()
