@@ -23,6 +23,7 @@
     <Project Path="tests/IntegrationTests/IntegrationTests.csproj" />
     <Project Path="tests/PublicApiIntegrationTests/PublicApiIntegrationTests.csproj" />
     <Project Path="tests/UnitTests/UnitTests.csproj" />
+      <Project Path="tests/EndToEndTests/EndToEndTests.csproj" />
   </Folder>
   <Project Path="docker-compose.dcproj">
     <Build />
