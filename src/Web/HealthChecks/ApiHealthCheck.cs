@@ -1,4 +1,4 @@
-﻿using Microsoft.eShopWeb.Web.Configuration;
+using Microsoft.eShopWeb.Web.Configuration;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 
@@ -34,7 +34,7 @@ public class ApiHealthCheck : IHealthCheck
                     $"API returned {response.StatusCode}");
             }
 
-            var content = await response.Content.ReabdAsStringAsync(cancellationToken);
+            var content = await response.Content.ReadAsStringAsync(cancellationToken);
 
             if (content.Contains(".NET Bot Black Sweatshirt"))
             {
