@@ -34,6 +34,7 @@ Some of the things seen in the functional tests include:
 ## Architecture Tests
 
 We have examples of architecture tests in the [sadukie/ArchUnitNET-tests branch](https://github.com/NimblePros/eShopOnWeb/tree/sadukie/ArchUnitNET-tests). Sadukie covers these architecture tests in:
+
 - [Architecture Testing for .NET webinar](https://mailchi.mp/nimblepros/arch-testing-for-dotnet-recording)
 - [Getting Started with Architecture Testing blog post](https://blog.nimblepros.com/blogs/getting-started-with-archunitnet/)
 
@@ -64,9 +65,9 @@ Use this workflow for agent-assisted test authoring while preserving human contr
 2. Ask for 3-5 scenario proposals and require each to be tagged as smoke, critical journey, or lower-level-test candidate.
 3. Ask the agent to draft one Playwright C# test for a selected scenario.
 4. Human review gate:
-	- Preserve user intent.
-	- Prefer role/text/test-id locators.
-	- Keep assertions user-visible.
+ - Preserve user intent.
+ - Prefer role/text/test-id locators.
+ - Keep assertions user-visible.
 5. Run targeted tests first, then broader suite.
 6. On failure, inspect trace, screenshot, and video artifacts.
 7. Ask the agent to diagnose from failure output and artifacts, then apply minimal fix.

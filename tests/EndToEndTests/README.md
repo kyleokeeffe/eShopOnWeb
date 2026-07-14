@@ -28,7 +28,7 @@ The smoke test starts the Web app automatically using its normal launch profile 
 
 1. Generate a first draft test:
 
-   pwsh tests/EndToEndTests/bin/Debug/net10.0/playwright.ps1 codegen https://localhost:5001
+   pwsh tests/EndToEndTests/bin/Debug/net10.0/playwright.ps1 codegen <https://localhost:5001>
 
 2. Paste the generated code into a test file as a draft.
 
@@ -55,7 +55,7 @@ Use this walkthrough when teaching the full authoring loop. It intentionally end
 
 2. Generate a draft with Playwright codegen:
 
-   pwsh tests/EndToEndTests/bin/Debug/net10.0/playwright.ps1 codegen https://localhost:5001
+   pwsh tests/EndToEndTests/bin/Debug/net10.0/playwright.ps1 codegen <https://localhost:5001>
 
 3. In the codegen browser, perform this short flow:
 
