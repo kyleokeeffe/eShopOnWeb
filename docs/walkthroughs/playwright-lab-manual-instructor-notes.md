@@ -14,6 +14,7 @@ It is designed to answer the questions that drove the plan:
 3. How do we debug failures with trace, screenshot, and video artifacts?
 4. What should be in browser tests vs lower-level tests?
 5. How can AI/agents help without lowering quality?
+6. How can we automate issue reproduction using Playwright and agents?
 
 ## Audience and Outcomes
 
@@ -31,6 +32,9 @@ By the end of this lab, learners should be able to:
 - Test strategy page: `docs/explore/tests.md`
 - Level 2 skill: `.claude/skills/playwright-dotnet-refactor/SKILL.md`
 - Refactor prompt template: `.claude/skills/playwright-dotnet-refactor/assets/refactor-prompt-template.md`
+- Issue repro skill: `.claude/skills/playwright-issue-repro-report/SKILL.md`
+- Issue repro workflow: `.claude/skills/playwright-issue-repro-report/references/WORKFLOW.md`
+- Issue prompt/comment templates: `.claude/skills/playwright-issue-repro-report/templates/`
 
 ## Lab Prerequisites
 
@@ -187,6 +191,58 @@ Run this workflow:
 6. If failed, inspect artifacts.
 7. Ask agent to diagnose from outputs and trace observations.
 
+## Issue-to-Repro Demo (Skill-Driven, Low Copy/Paste)
+
+Use this as an optional advanced segment when teaching issue triage workflows.
+
+### Reusable skill assets
+
+- Skill: `.claude/skills/playwright-issue-repro-report/SKILL.md`
+- Workflow reference: `.claude/skills/playwright-issue-repro-report/references/WORKFLOW.md`
+- Repro prompt template: `.claude/skills/playwright-issue-repro-report/templates/issue-repro-prompt.md`
+- Issue comment template: `.claude/skills/playwright-issue-repro-report/templates/issue-comment-template.md`
+
+### Instructor flow
+
+1. Start from a real GitHub issue URL/number.
+2. Open `templates/issue-repro-prompt.md` and fill only issue-specific inputs.
+3. Ask the agent to execute the filled prompt and produce:
+   - Repro status (reproduced/not reproduced/inconclusive)
+   - Deterministic repro steps
+   - Test snippet or file update proposal
+   - Artifact locations
+4. Run the targeted repro test command from agent output.
+5. Collect evidence from `TestResults/PlaywrightArtifacts/...`.
+6. Open `templates/issue-comment-template.md` and fill with actual repro results.
+7. Post the comment with artifacts.
+
+### Posting artifacts to the GitHub issue
+
+Option A: GitHub web UI (recommended for live demo)
+
+1. Open the issue comment box.
+2. Drag-and-drop `failure.png` and a zipped video artifact.
+3. Paste the populated comment template text.
+4. Include trace path or hosted link instructions.
+
+Option B: GitHub CLI
+
+1. Save populated comment body to a local markdown file.
+2. Ensure artifact links are reachable URLs.
+3. Post:
+
+```powershell
+gh issue comment <issue-number> --body-file <comment-file>.md
+```
+
+### Evidence quality checklist
+
+1. Repro status clearly stated.
+2. Expected vs observed behavior both documented.
+3. Screenshot included for visual proof.
+4. Trace included for timeline/root-cause analysis.
+5. Next action and owner suggested.
+
 ## Demo Command Block (Copy/Paste)
 
 ```powershell
@@ -200,6 +256,9 @@ dotnet test tests/EndToEndTests/EndToEndTests.csproj
 pwsh tests/EndToEndTests/bin/Debug/net10.0/playwright.ps1 codegen https://localhost:5001
 dotnet test tests/EndToEndTests/EndToEndTests.csproj --filter FullyQualifiedName~CatalogTests
 dotnet test tests/EndToEndTests/EndToEndTests.csproj --filter FullyQualifiedName~BasketTests.Cart_AddItem_ShowsExpectedTotal
+
+# Optional: post issue comment from CLI after preparing comment markdown
+# gh issue comment <issue-number> --body-file <comment-file>.md
 ```
 
 After finishing interactive demos, stop the running app with Ctrl+C in Terminal 1.
