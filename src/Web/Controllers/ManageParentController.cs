@@ -13,25 +13,23 @@ using Microsoft.eShopWeb.Web.ViewModels.Manage;
 
 namespace Microsoft.eShopWeb.Web.Controllers;
 
-[ApiExplorerSettings(IgnoreApi = true)]
-[Authorize] // Controllers that mainly require Authorization still use Controller/View; other pages use Pages
-[Route("[controller]/[action]")]
-public abstract class ManageControllerParent : Controller
+
+public abstract class ManageParentController : Controller
 {
   private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IEmailSender _emailSender;
-    private readonly IAppLogger<ManageControllerParent> _logger;
+    private readonly IAppLogger<ManageParentController> _logger;
     private readonly UrlEncoder _urlEncoder;
 
     private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
     private const string RecoveryCodesKey = nameof(RecoveryCodesKey);
 
-    public ManageControllerParent(
+    public ManageParentController(
       UserManager<ApplicationUser> userManager,
       SignInManager<ApplicationUser> signInManager,
       IEmailSender emailSender,
-      IAppLogger<ManageControllerParent> logger,
+      IAppLogger<ManageParentController> logger,
       UrlEncoder urlEncoder)
     {
         _userManager = userManager;

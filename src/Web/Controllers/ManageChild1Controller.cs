@@ -18,13 +18,13 @@ namespace Microsoft.eShopWeb.Web.Controllers;
 [ApiExplorerSettings(IgnoreApi = true)]
 [Authorize] // Controllers that mainly require Authorization still use Controller/View; other pages use Pages
 [Route("[controller]/[action]")]
-public class ManageControllerChild1 : ManageControllerParent
+public class ManageChild1Controller : ManageParentController
 {
   
-public ManageControllerChild1( UserManager<ApplicationUser> userManager,
+public ManageChild1Controller( UserManager<ApplicationUser> userManager,
       SignInManager<ApplicationUser> signInManager,
       IEmailSender emailSender,
-      IAppLogger<ManageControllerParent> logger,
+      IAppLogger<ManageParentController> logger,
       UrlEncoder urlEncoder):base(userManager, signInManager, emailSender, logger, urlEncoder)
     {
 
