@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using System.Text.Encodings.Web;
 using Ardalis.GuardClauses;
 using Microsoft.AspNetCore.Authentication;
@@ -10,35 +10,24 @@ using Microsoft.eShopWeb.Infrastructure.Identity;
 using Microsoft.eShopWeb.Web.Extensions;
 using Microsoft.eShopWeb.Web.Services;
 using Microsoft.eShopWeb.Web.ViewModels.Manage;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using NuGet.Packaging.Signing;
 
 namespace Microsoft.eShopWeb.Web.Controllers;
 
 [ApiExplorerSettings(IgnoreApi = true)]
 [Authorize] // Controllers that mainly require Authorization still use Controller/View; other pages use Pages
 [Route("[controller]/[action]")]
-public class ManageController : Controller
+public class ManageControllerChild1 : ManageControllerParent
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager;
-    private readonly IEmailSender _emailSender;
-    private readonly IAppLogger<ManageController> _logger;
-    private readonly UrlEncoder _urlEncoder;
-
-    private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
-    private const string RecoveryCodesKey = nameof(RecoveryCodesKey);
-
-    public ManageController(
-      UserManager<ApplicationUser> userManager,
+  
+public ManageControllerChild1( UserManager<ApplicationUser> userManager,
       SignInManager<ApplicationUser> signInManager,
       IEmailSender emailSender,
-      IAppLogger<ManageController> logger,
-      UrlEncoder urlEncoder)
+      IAppLogger<ManageControllerParent> logger,
+      UrlEncoder urlEncoder):base(userManager, signInManager, emailSender, logger, urlEncoder)
     {
-        _userManager = userManager;
-        _signInManager = signInManager;
-        _emailSender = emailSender;
-        _logger = logger;
-        _urlEncoder = urlEncoder;
+
     }
 
     [TempData]
@@ -73,7 +62,7 @@ public class ManageController : Controller
         var user = await GetCurrentUserAsync();
 
         var email = user.Email;
-        if (model.Email != email)
+        if (!String.Equals(model.Email,email))
         {
             var setEmailResult = await _userManager.SetEmailAsync(user, model.Email);
             if (!setEmailResult.Succeeded)
@@ -83,7 +72,7 @@ public class ManageController : Controller
         }
 
         var phoneNumber = user.PhoneNumber;
-        if (model.PhoneNumber != phoneNumber)
+        if (!String.Equals(model.PhoneNumber,phoneNumber))
         {
             var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, model.PhoneNumber);
             if (!setPhoneResult.Succeeded)
@@ -210,7 +199,7 @@ public class ManageController : Controller
 
         var model = new ExternalLoginsViewModel { CurrentLogins = await _userManager.GetLoginsAsync(user) };
         model.OtherLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync())
-            .Where(auth => model.CurrentLogins.All(ul => auth.Name != ul.LoginProvider))
+            .Where(auth => model.CurrentLogins.All(ul => !String.Equals(auth.Name,ul.LoginProvider)))
             .ToList();
         model.ShowRemoveButton = await _userManager.HasPasswordAsync(user) || model.CurrentLogins.Count > 1;
         model.StatusMessage = StatusMessage;
