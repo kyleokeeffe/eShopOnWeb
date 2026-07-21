@@ -16,14 +16,14 @@ namespace Microsoft.eShopWeb.Web.Controllers;
 
 public abstract class ManageController : Controller
 {
-  private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager;
-    private readonly IEmailSender _emailSender;
-    private readonly IAppLogger<ManageController> _logger;
-    private readonly UrlEncoder _urlEncoder;
+  protected readonly UserManager<ApplicationUser> _userManager;
+    protected readonly SignInManager<ApplicationUser> _signInManager;
+    protected readonly IEmailSender _emailSender;
+    protected readonly IAppLogger<ManageController> _logger;
+    protected readonly UrlEncoder _urlEncoder;
 
-    private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
-    private const string RecoveryCodesKey = nameof(RecoveryCodesKey);
+    protected const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
+    protected const string RecoveryCodesKey = nameof(RecoveryCodesKey);
 
     public ManageController(
       UserManager<ApplicationUser> userManager,
@@ -38,13 +38,14 @@ public abstract class ManageController : Controller
         _logger = logger;
         _urlEncoder = urlEncoder;
     }
-
-     private async Task<ApplicationUser> GetCurrentUserAsync()
+ [TempData]
+    public string? StatusMessage { get; set; }
+     protected async Task<ApplicationUser> GetCurrentUserAsync()
     {
         var user = await _userManager.GetUserAsync(User);
         return user ?? throw new UserNotFoundException(_userManager.GetUserId(User) ?? string.Empty);
     }
-      private void AddErrors(IdentityResult result)
+      protected void AddErrors(IdentityResult result)
     {
         foreach (var error in result.Errors)
         {

@@ -17,7 +17,7 @@ namespace Microsoft.eShopWeb.Web.Controllers;
 
 [ApiExplorerSettings(IgnoreApi = true)]
 [Authorize] // Controllers that mainly require Authorization still use Controller/View; other pages use Pages
-[Route("[controller]/[action]")]
+[Route("Manage/[action]")]
 public class Manage2FAController : ManageController
 {
   
@@ -30,8 +30,7 @@ public Manage2FAController( UserManager<ApplicationUser> userManager,
 
     }
 
-    [TempData]
-    public string? StatusMessage { get; set; }
+   
 
 
     [HttpGet]

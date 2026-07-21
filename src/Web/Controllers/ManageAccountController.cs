@@ -15,7 +15,7 @@ namespace Microsoft.eShopWeb.Web.Controllers;
 
 [ApiExplorerSettings(IgnoreApi = true)]
 [Authorize] // Controllers that mainly require Authorization still use Controller/View; other pages use Pages
-[Route("[controller]/[action]")] //kyle: split route?
+[Route("Manage/[action]")] //kyle: split route?
 public class ManageAccountController : ManageController
 {
  
